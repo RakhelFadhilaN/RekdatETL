@@ -15,6 +15,7 @@
 - [Challenges and Solutions](#challenges-and-solutions)
 - [Future Improvements](#future-improvements)
 - [Conclusion](#conclusion)
+- [Project Deliverables](#project-delivarables)
 
 ## Overview
 This project aims to develop a robust predictive model for estimating the IMDb vote averages of upcoming movies, supported by a comprehensive ETL (Extract, Transform, Load) pipeline. The pipeline will extract data from various sources, including genres, release dates, keywords derived from movie overviews, and real-time search interest metrics from Google Trends related to the movie title and its cast. By transforming and analyzing this historical data alongside recent audience behavior, the model will identify key factors that significantly influence viewer ratings and preferences. The insights derived from this model will empower filmmakers and marketers to make data-driven decisions regarding movie releases, promotional strategies, and target audience engagement. Ultimately, this project seeks to enhance the accuracy of box office forecasts and movie reception predictions, ensuring that studios can better align their productions with audience expectations while leveraging an efficient and scalable data processing framework.
@@ -40,6 +41,9 @@ This project aims to develop a robust predictive model for estimating the IMDb v
    ```
    
 ## How to Run
+- **Required Softwares**: Ensure you have Docker Desktop and Visual Studio Code IDE 
+  https://www.docker.com/products/docker-desktop/ 
+  https://code.visualstudio.com/Download
 - **Apache Airflow**: Start the Airflow web server and scheduler:
   ```bash
   airflow db init      # Initialize the database (first time only)
@@ -73,3 +77,7 @@ This project aims to develop a robust predictive model for estimating the IMDb v
 ## Future Improvements
 
 ## Conclusions
+
+## Project Deliverables
+Report:    https://docs.google.com/document/d/1crWwGwW7_ttuAI7sV7RiYqUet0I6Ly-UfiBugnIW5zY/edit?usp=sharing
+Video:   
