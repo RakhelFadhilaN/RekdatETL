@@ -42,8 +42,8 @@ This project aims to develop a robust predictive model for estimating the IMDb v
    
 ## How to Run
 - **Required Softwares**: Ensure you have Docker Desktop and Visual Studio Code IDE 
-  [Docker Desktop](#https://www.docker.com/products/docker-desktop/) 
-  [Visual Studio](#https://code.visualstudio.com/Download)
+  [Docker Desktop](https://www.docker.com/products/docker-desktop/) 
+  [Visual Studio](https://code.visualstudio.com/Download)
   
 - **Apache Airflow**: Start the Airflow web server and scheduler:
   ```bash
