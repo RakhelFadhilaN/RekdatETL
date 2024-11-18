@@ -42,6 +42,7 @@ This project aims to develop a robust predictive model for estimating the IMDb v
    
 ## How to Run
 - **Required Softwares**: Ensure you have Docker Desktop and Visual Studio Code IDE 
+Links:
   [Docker Desktop](https://www.docker.com/products/docker-desktop/) 
   [Visual Studio](https://code.visualstudio.com/Download)
   
