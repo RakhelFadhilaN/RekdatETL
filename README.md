@@ -26,8 +26,39 @@ This project aims to develop a robust predictive model for estimating the IMDb v
 ## Project Structure
 
 ## Installation
-
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/movie_recommendation_project.git
+   ```
+2. Navigate to the project directory:
+   ```bash
+   cd movie_recommendation_project
+   ```
+3. Install the required dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+   
 ## How to Run
+- **Apache Airflow**: Start the Airflow web server and scheduler:
+  ```bash
+  airflow db init      # Initialize the database (first time only)
+  airflow webserver --port 8080
+  airflow scheduler
+  ```
+
+- **ETL Pipeline**: Visit `http://localhost:8080` in your browser to trigger the ETL pipeline via the Airflow dashboard.
+
+- **Model Training**: Train the model by executing:
+  ```bash
+  python src/model/train_model.py
+  ```
+
+- **Start Dashboard**: Launch the dashboard with:
+  ```bash
+  streamlit run src/dashboard/app.py
+  ```
+
 
 ## Data Sources
 
