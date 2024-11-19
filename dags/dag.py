@@ -24,7 +24,7 @@ dag = DAG(
     'movie_data_etl',
     default_args=default_args,
     description='ETL pipeline for movie data from TMDB and OMDB APIs',
-    schedule_interval=timedelta(days=1),
+    schedule_interval=timedelta(hours=1),
 )
 
 # Function to fetch movie data from both APIs
