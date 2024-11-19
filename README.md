@@ -1,5 +1,11 @@
 # Movie Recommendations - End to End Data Engineering Project
 
+## 👥 Team Members
+   - Jhon Samuel Kudadiri (22/503772/TK/55066) 📚🤓🏆
+   - Vita
+   - Rakhel Nastyty
+
+
 ## Table of Contents
 - [Overview](#overview)
 - [Features](#features)
