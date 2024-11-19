@@ -86,6 +86,21 @@ x-airflow-common:
       condition: service_healthy
 
 services:
+  dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8501:8501"
+    environment:
+      - DATABASE_URL=postgresql://airflow:airflow@172.19.0.4:5432/movies
+    depends_on:
+      - postgres
+    restart: always
+    volumes:
+      - ./dashboard:/app/data
+    user: root
+      
   postgres:
     image: postgres:13
     environment:

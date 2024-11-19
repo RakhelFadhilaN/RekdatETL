@@ -1,16 +1,32 @@
-FROM  apache/airflow:latest
+FROM apache/airflow:latest AS airflow-base
+
+FROM python:3.9-slim
+
+WORKDIR /app
 
 USER root
 RUN apt-get update && \
-    && apt-get install -y --no-install-recommends \
-    python3-pip \
-    python3-yaml \
-    rsyslog systemd systemd-cron sudo \
-    apt-get -y install git && \
-    apt-get clean 
+    apt-get install -y \
+    build-essential \
+    curl \
+    software-properties-common \
+    git && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
-RUN pip3 install --upgrade pip 
+COPY requirements.txt .
 
-RUN pip3 install streamlit
+RUN pip install --no-cache-dir -r requirements.txt
+
+RUN pip install --upgrade pip 
+
+RUN pip install streamlit
+
+COPY dashboard/movie_dashboard.py .
+
+# Streamlit port
+EXPOSE 8501 
 
 USER airflow
+
+CMD ["streamlit", "run", "movie_dashboard.py", "--server.address=0.0.0.0"]
