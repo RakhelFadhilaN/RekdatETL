@@ -29,6 +29,15 @@ dag = DAG(
 
 # Function to fetch movie data
 def fetch_movie_data(**context):
+    def validate_date(date_str):
+        """Validate and parse a date string. Return None if invalid or empty."""
+        try:
+            if date_str:
+                return datetime.strptime(date_str, "%Y-%m-%d").date()
+            return None
+        except ValueError:
+            return None
+
     def get_popular_movies(page=1):
         url = f"{TMDB_BASE_URL}/movie/popular"
         params = {
@@ -95,6 +104,8 @@ def fetch_movie_data(**context):
                 tmdb_details = get_movie_details_tmdb(movie_id)
                 omdb_details = get_movie_details_omdb(tmdb_details['title'])
 
+                release_date = validate_date(tmdb_details.get('release_date'))
+
                 movie_record = {
                     'movie_id': movie_id,
                     'title': tmdb_details['title'],
@@ -106,8 +117,6 @@ def fetch_movie_data(**context):
                     'box_office': omdb_details.get('BoxOffice', 'N/A') if omdb_details else 'N/A',
                     'awards': omdb_details.get('Awards', 'N/A') if omdb_details else 'N/A',
                     'runtime': omdb_details.get('Runtime', 'N/A') if omdb_details else 'N/A',
-                    'fetch_date': datetime.now().strftime('%Y-%m-%d'),
-                    'page_number': page
                 }
                 movies_data.append(movie_record)
                 print(f"Processed movie: {movie_record['title']}")
@@ -138,10 +147,10 @@ def insert_movie_data(**context):
         pg_hook.run("""
             INSERT INTO movies (
                 movie_id, title, overview, release_date, genres,
-                tmdb_rating, imdb_rating, box_office, awards, runtime, fetch_date
+                tmdb_rating, imdb_rating, box_office, awards, runtime
             ) VALUES (
                 %(movie_id)s, %(title)s, %(overview)s, %(release_date)s, %(genres)s,
-                %(tmdb_rating)s, %(imdb_rating)s, %(box_office)s, %(awards)s, %(runtime)s, %(fetch_date)s
+                %(tmdb_rating)s, %(imdb_rating)s, %(box_office)s, %(awards)s, %(runtime)s
             )
             ON CONFLICT (movie_id) 
             DO UPDATE SET
@@ -153,7 +162,6 @@ def insert_movie_data(**context):
                 box_office = EXCLUDED.box_office,
                 awards = EXCLUDED.awards,
                 runtime = EXCLUDED.runtime,
-                fetch_date = EXCLUDED.fetch_date
         """, parameters=movie)
 
 # Create PostgreSQL tables
@@ -169,8 +177,6 @@ CREATE TABLE IF NOT EXISTS movies (
     box_office VARCHAR(50),
     awards TEXT,
     runtime VARCHAR(20),
-    fetch_date DATE,
-    page_number INTEGER
 );
 """
 
