@@ -176,7 +176,7 @@ CREATE TABLE IF NOT EXISTS movies (
     imdb_rating VARCHAR(10),
     box_office VARCHAR(50),
     awards TEXT,
-    runtime VARCHAR(20),
+    runtime VARCHAR(20)
 );
 """
 
