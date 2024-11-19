@@ -29,16 +29,16 @@ dag = DAG(
 
 # Function to fetch movie data from both APIs
 def fetch_movie_data(**context):
-    def get_popular_movies():
+    def get_popular_movies(page=1):
         url = f"{TMDB_BASE_URL}/movie/popular"
         params = {
             'api_key': TMDB_API_KEY,
             'language': 'en-US',
-            'page': 1
+            'page': page
         }
         response = requests.get(url, params=params)
         if response.status_code == 200:
-            return response.json().get('results', [])
+            return response.json()
         else:
             raise Exception(f"Error fetching popular movies: {response.status_code}")
 
@@ -69,30 +69,45 @@ def fetch_movie_data(**context):
         else:
             raise Exception(f"Error fetching OMDB details for {movie_title}: {response.status_code}")
 
-    # Fetch and combine data
+    # Fetch and combine data with pagination
     movies_data = []
-    popular_movies = get_popular_movies()
+    num_pages = 5  # Fetch 5 pages (approximately 100 movies)
+    
+    for page in range(1, num_pages + 1):
+        response_data = get_popular_movies(page)
+        popular_movies = response_data.get('results', [])
+        total_pages = response_data.get('total_pages')
+        
+        print(f"Fetching page {page} of {total_pages} (limiting to {num_pages} pages)")
+        
+        for movie in popular_movies:
+            try:
+                movie_id = movie['id']
+                tmdb_details = get_movie_details_tmdb(movie_id)
+                omdb_details = get_movie_details_omdb(tmdb_details['title'])
 
-    for movie in popular_movies:
-        movie_id = movie['id']
-        tmdb_details = get_movie_details_tmdb(movie_id)
-        omdb_details = get_movie_details_omdb(tmdb_details['title'])
+                movie_record = {
+                    'movie_id': movie_id,
+                    'title': tmdb_details['title'],
+                    'overview': tmdb_details['overview'],
+                    'release_date': tmdb_details['release_date'],
+                    'genres': ','.join([genre['name'] for genre in tmdb_details['genres']]),
+                    'tmdb_rating': tmdb_details['vote_average'],
+                    'imdb_rating': omdb_details.get('imdbRating', 'N/A') if omdb_details else 'N/A',
+                    'box_office': omdb_details.get('BoxOffice', 'N/A') if omdb_details else 'N/A',
+                    'awards': omdb_details.get('Awards', 'N/A') if omdb_details else 'N/A',
+                    'runtime': omdb_details.get('Runtime', 'N/A') if omdb_details else 'N/A',
+                    'fetch_date': datetime.now().strftime('%Y-%m-%d'),
+                    'page_number': page
+                }
+                movies_data.append(movie_record)
+                print(f"Processed movie: {movie_record['title']}")
+                
+            except Exception as e:
+                print(f"Error processing movie {movie.get('id')}: {str(e)}")
+                continue
 
-        movie_record = {
-            'movie_id': movie_id,
-            'title': tmdb_details['title'],
-            'overview': tmdb_details['overview'],
-            'release_date': tmdb_details['release_date'],
-            'genres': ','.join([genre['name'] for genre in tmdb_details['genres']]),
-            'tmdb_rating': tmdb_details['vote_average'],
-            'imdb_rating': omdb_details.get('imdbRating', 'N/A') if omdb_details else 'N/A',
-            'box_office': omdb_details.get('BoxOffice', 'N/A') if omdb_details else 'N/A',
-            'awards': omdb_details.get('Awards', 'N/A') if omdb_details else 'N/A',
-            'runtime': omdb_details.get('Runtime', 'N/A') if omdb_details else 'N/A',
-            'fetch_date': datetime.now().strftime('%Y-%m-%d')
-        }
-        movies_data.append(movie_record)
-
+    print(f"Total movies fetched: {len(movies_data)}")
     # Store the data in XCom for the next task
     context['task_instance'].xcom_push(key='movies_data', value=movies_data)
 
@@ -139,7 +154,8 @@ CREATE TABLE IF NOT EXISTS movies (
     box_office VARCHAR(50),
     awards TEXT,
     runtime VARCHAR(20),
-    fetch_date DATE
+    fetch_date DATE,
+    page_number INTEGER
 );
 """
 
