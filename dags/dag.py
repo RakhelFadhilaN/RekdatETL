@@ -111,7 +111,7 @@ def fetch_movie_data(**context):
                     'movie_id': movie_id,
                     'title': tmdb_details['title'],
                     'overview': tmdb_details['overview'],
-                    'release_date': tmdb_details['release_date'],
+                    'release_date': release_date if release_date else '1900-01-01',
                     'genres': ','.join([genre['name'] for genre in tmdb_details['genres']]),
                     'tmdb_rating': tmdb_details['vote_average'],
                     'imdb_rating': omdb_details.get('imdbRating', 'N/A') if omdb_details else 'N/A',
