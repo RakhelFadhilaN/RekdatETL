@@ -25,6 +25,7 @@ dag = DAG(
     default_args=default_args,
     description='ETL pipeline for movie data from TMDB and OMDB APIs',
     schedule_interval=timedelta(hours=1),
+    catchup=False,
 )
 
 # Function to fetch movie data
@@ -161,7 +162,7 @@ def insert_movie_data(**context):
                 imdb_rating = EXCLUDED.imdb_rating,
                 box_office = EXCLUDED.box_office,
                 awards = EXCLUDED.awards,
-                runtime = EXCLUDED.runtime,
+                runtime = EXCLUDED.runtime
         """, parameters=movie)
 
 # Create PostgreSQL tables
