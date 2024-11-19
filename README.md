@@ -2,7 +2,7 @@
 
 ## 👥 Team Members
    - Jhon Samuel Kudadiri (22/503772/TK/55066) 📚🤓🏆
-   - Vita
+   - Jovita Ayu Ramaniyya (22/503808/TK/55072)
    - Rakhel Nastyty
 
 
