@@ -13,7 +13,11 @@
 - [Project Deliverables](#project-delivarables)
 
 ## Overview
-This project aims to develop a robust predictive model for estimating the IMDb vote averages of upcoming movies, supported by a comprehensive ETL (Extract, Transform, Load) pipeline. The pipeline will extract data from various sources, including genres, release dates, keywords derived from movie overviews, and real-time search interest metrics from Google Trends related to the movie title and its cast. By transforming and analyzing this historical data alongside recent audience behavior, the model will identify key factors that significantly influence viewer ratings and preferences. The insights derived from this model will empower filmmakers and marketers to make data-driven decisions regarding movie releases, promotional strategies, and target audience engagement. Ultimately, this project seeks to enhance the accuracy of box office forecasts and movie reception predictions, ensuring that studios can better align their productions with audience expectations while leveraging an efficient and scalable data processing framework.
+The number of movies and TV shows is growing so fast, making it harder for people to find content that matches their interests. A movie recommendation system helps solve this problem by suggesting movies based on user preferences or similarities between movies.
+
+Two popular sources for movie data are OMDB and TMDB. OMDB provides details such as ratings, Box Office, Awards,  genres, and runtime while TMDB gives details like title, overview, release date, and vote average. By combining both databases, we will be able to create a system for movie recommendations.
+
+In this project, the recommendation system will use data from OMDB and TMDB and compare movie plots using cosine similarity to find and suggest movies with similar stories.
 
 ## Installation
 1. Clone the repository:
