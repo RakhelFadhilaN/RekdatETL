@@ -7,6 +7,7 @@ from airflow.providers.postgres.operators.postgres import PostgresOperator
 from airflow.providers.postgres.hooks.postgres import PostgresHook
 from airflow.operators.bash import BashOperator
 
+
 # API Configuration
 TMDB_API_KEY = 'f0b53a601fc5fb5ecbf61da1c4f871eb'
 TMDB_BASE_URL = 'https://api.themoviedb.org/3'
@@ -213,7 +214,8 @@ insert_movie_data_task = PythonOperator(
 
 refresh_streamlit_task = BashOperator(
     task_id='refresh_streamlit_dashboard',
-    bash_command='pkill -f "streamlit run" || true && streamlit run /dashboard/dashboard.py --server.port 8501',
+    bash_command=('pkill -f "streamlit run" || true && '
+        'nohup streamlit run /dashboard/dashboard.py --server.port 8501 > /tmp/streamlit.log 2>&1 &'),
     dag=dag,
 )
 
