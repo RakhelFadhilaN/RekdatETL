@@ -5,11 +5,12 @@ import pandas as pd
 from airflow.operators.python_operator import PythonOperator
 from airflow.providers.postgres.operators.postgres import PostgresOperator
 from airflow.providers.postgres.hooks.postgres import PostgresHook
+from airflow.operators.bash import BashOperator
 
 # API Configuration
 TMDB_API_KEY = 'f0b53a601fc5fb5ecbf61da1c4f871eb'
 TMDB_BASE_URL = 'https://api.themoviedb.org/3'
-OMDB_API_KEY = '31ab3ef2'
+OMDB_API_KEY = '6357410a'#31ab3ef2
 OMDB_BASE_URL = 'http://www.omdbapi.com/'
 
 default_args = {
@@ -210,5 +211,11 @@ insert_movie_data_task = PythonOperator(
     dag=dag
 )
 
+refresh_streamlit_task = BashOperator(
+    task_id='refresh_streamlit_dashboard',
+    bash_command='pkill -f "streamlit run" || true && streamlit run /dashboard/dashboard.py --server.port 8501',
+    dag=dag,
+)
+
 # Set task dependencies
-create_tables_task >> fetch_movie_data_task >> insert_movie_data_task
+create_tables_task >> fetch_movie_data_task >> insert_movie_data_task >> refresh_streamlit_task
