@@ -45,11 +45,6 @@ Links:<br>
 
 - **ETL Pipeline**: Visit `http://localhost:8080` in your browser to trigger the ETL pipeline via the Airflow dashboard.
 
-- **Model Training**: Train the model by executing:
-  ```bash
-  python src/model/train_model.py
-  ```
-
 - **Start Dashboard**: Launch the dashboard with:
   ```bash
   streamlit run src/dashboard/app.py
