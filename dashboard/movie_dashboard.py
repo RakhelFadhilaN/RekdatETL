@@ -28,7 +28,8 @@ def load_data():
     df['imdb_rating'] = pd.to_numeric(df['imdb_rating'], errors='coerce')
     df['box_office'] = df['box_office'].replace('N/A', np.nan)
     if 'box_office' in df.columns:
-        df['box_office'] = df['box_office'].astype(str).str.replace('$', '', regex=False).str.replace(',', '', regex=False).astype(float, errors='coerce')
+        df['box_office'] = df['box_office'].astype(str).str.replace('$', '', regex=False).str.replace(',', '', regex=False)
+        df['box_office'] = pd.to_numeric(df['box_office'], errors='coerce')
 
     
     return df
@@ -148,10 +149,28 @@ def main():
     col1, col2 = st.columns(2)
     
     with col1:
-        box_office_by_genre = filtered_df.assign(
-    genre=filtered_df['genres'].str.split(',').explode()
-).groupby('genre')['box_office'].mean(skipna=True).sort_values(ascending=True)
+    # Check if required columns exist
+        if 'genres' in filtered_df.columns and 'box_office' in filtered_df.columns:
+        # Reset index and explode genres to create one row per genre
+            filtered_df = filtered_df.reset_index(drop=True).drop_duplicates()
 
+            genre_box_office_df = filtered_df.assign(
+            genre=filtered_df['genres'].str.split(',').explode().str.strip()
+        ).reset_index(drop=True)
+
+        # Remove rows with missing genres or box office values
+            genre_box_office_df = genre_box_office_df[~genre_box_office_df['genre'].isna()]
+            genre_box_office_df = genre_box_office_df[~genre_box_office_df['box_office'].isna()]
+
+        # Calculate average box office by genre
+            box_office_by_genre = (
+            genre_box_office_df.groupby('genre')['box_office']
+            .mean(skipna=True)
+            .sort_values(ascending=True)
+        )
+        else:
+        # Create an empty series if required columns are missing
+            box_office_by_genre = pd.Series(dtype=float)
         
         fig = px.bar(x=box_office_by_genre.values, y=box_office_by_genre.index,
                     title="Average Box Office by Genre",
