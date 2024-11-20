@@ -13,14 +13,6 @@
 - [Project Structure](#project-structure)
 - [Installation](#installation)
 - [How to Run](#how-to-run)
-- [Data Sources](#data-sources)
-- [Data Processing and Transformation](#data-processing-and-transformation)
-- [Machine Learning Model](#machine-learning-model)
-- [Dashboard](#dashboard)
-- [Deployment](#deployment)
-- [Challenges and Solutions](#challenges-and-solutions)
-- [Future Improvements](#future-improvements)
-- [Conclusion](#conclusion)
 - [Project Deliverables](#project-delivarables)
 
 ## Overview
@@ -70,21 +62,6 @@ Links:<br>
   ```bash
   streamlit run src/dashboard/app.py
   ```
-
-
-## Data Sources
-
-## Data Processing and Transformation
-
-## ML(?) Model
-
-## Dashboard
-
-## Challenges & Solution
-
-## Future Improvements
-
-## Conclusions
 
 ## Project Deliverables
 Report:    https://docs.google.com/document/d/1crWwGwW7_ttuAI7sV7RiYqUet0I6Ly-UfiBugnIW5zY/edit?usp=sharing
