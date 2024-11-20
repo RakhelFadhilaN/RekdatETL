@@ -54,7 +54,7 @@ Links:<br>
 2. **OMDP API**: Adds details (e.g., IMDb rating, box office revenue, awards, and runtime)
 
 ## Project Deliverables
-Report:https://curse-snarl-0ec.notion.site/ETL-Movie-Data-Recommendation-Model-143dd068d33780c58c97f9c2311be770?pvs=73
+Report:https://curse-snarl-0ec.notion.site/ETL-Movie-Data-Recommendation-Model-143dd068d33780c58c97f9c2311be770?pvs=4
 Video:    
 
 
