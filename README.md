@@ -35,21 +35,21 @@ This project aims to develop a robust predictive model for estimating the IMDb v
 ## Installation
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/movie_recommendation_project.git
+   git clone https://github.com/RakhelFadhilaN/RekdatETL.git
    ```
 2. Navigate to the project directory:
    ```bash
-   cd movie_recommendation_project
+   cd RekdatETL
    ```
-3. Install the required dependencies:
+3. Docker compose up:
    ```bash
-   pip install -r requirements.txt
+   docker-compose up
    ```
    
 ## How to Run
 - **Required Softwares**: Ensure you have Docker Desktop and Visual Studio Code IDE 
-Links:
-  [Docker Desktop](https://www.docker.com/products/docker-desktop/) 
+Links:<br>
+  [Docker Desktop](https://www.docker.com/products/docker-desktop/) <br>
   [Visual Studio](https://code.visualstudio.com/Download)
   
 - **Apache Airflow**: Start the Airflow web server and scheduler:
