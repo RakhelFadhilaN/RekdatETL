@@ -9,7 +9,7 @@ import os
 
 def get_database_connection():
     database_url = os.getenv('DATABASE_URL', 
-                            "postgresql://airflow:airflow@172.19.0.2:5432/movies")
+                            "postgresql://airflow:airflow@localhost:5432/movies")
     return create_engine(database_url)
 
 # Load data from database
@@ -27,7 +27,9 @@ def load_data():
     df['release_date'] = pd.to_datetime(df['release_date'])
     df['imdb_rating'] = pd.to_numeric(df['imdb_rating'], errors='coerce')
     df['box_office'] = df['box_office'].replace('N/A', np.nan)
-    df['box_office'] = df['box_office'].str.replace('$', '').str.replace(',', '').astype(float)
+    if 'box_office' in df.columns:
+        df['box_office'] = df['box_office'].astype(str).str.replace('$', '', regex=False).str.replace(',', '', regex=False).astype(float, errors='coerce')
+
     
     return df
 
@@ -55,6 +57,7 @@ def main():
     )
     
     # Genre filter
+    df['genres'] = df['genres'].fillna('')
     all_genres = [genre for genres in df['genres'].str.split(',') for genre in genres]
     unique_genres = sorted(list(set(all_genres)))
     selected_genres = st.sidebar.multiselect(
@@ -64,18 +67,24 @@ def main():
     )
     
     # Filter data based on selections
+    if df['release_date'].isna().any():
+        df = df[df['release_date'].notna()]
     mask = (df['release_date'].dt.date >= date_range[0]) & (df['release_date'].dt.date <= date_range[1])
     if selected_genres:
-        mask = mask & df['genres'].apply(lambda x: any(genre in x for genre in selected_genres))
+        mask = mask & df['genres'].apply(lambda x: any(genre in x for genre in selected_genres) if isinstance(x, str) else False)
     filtered_df = df[mask]
     
+    # Reset index to ensure no duplicate labels
+    filtered_df = filtered_df.reset_index(drop=True).drop_duplicates()
+
     # Top metrics
     col1, col2, col3, col4 = st.columns(4)
     
     with col1:
         st.metric("Total Movies", len(filtered_df))
     with col2:
-        avg_tmdb = filtered_df['tmdb_rating'].mean()
+        avg_tmdb = filtered_df['tmdb_rating'].mean() if not filtered_df.empty else 0
+
         st.metric("Avg TMDB Rating", f"{avg_tmdb:.1f}")
     with col3:
         avg_imdb = filtered_df['imdb_rating'].mean()
@@ -140,8 +149,9 @@ def main():
     
     with col1:
         box_office_by_genre = filtered_df.assign(
-            genre=filtered_df['genres'].str.split(',').explode()
-        ).groupby('genre')['box_office'].mean().sort_values(ascending=True)
+    genre=filtered_df['genres'].str.split(',').explode()
+).groupby('genre')['box_office'].mean(skipna=True).sort_values(ascending=True)
+
         
         fig = px.bar(x=box_office_by_genre.values, y=box_office_by_genre.index,
                     title="Average Box Office by Genre",
