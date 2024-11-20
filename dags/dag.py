@@ -6,6 +6,9 @@ from airflow.operators.python_operator import PythonOperator
 from airflow.providers.postgres.operators.postgres import PostgresOperator
 from airflow.providers.postgres.hooks.postgres import PostgresHook
 from airflow.operators.bash import BashOperator
+import os
+import signal
+import subprocess
 
 
 # API Configuration
@@ -167,6 +170,12 @@ def insert_movie_data(**context):
                 runtime = EXCLUDED.runtime
         """, parameters=movie)
 
+def restart_streamlit():
+    # Kill existing Streamlit processes
+    os.system("lsof -ti:8501 | xargs -r kill")
+    # Start Streamlit server
+    subprocess.Popen(["streamlit", "run", "/dashboard/dashboard.py", "--server.port=8501"])
+
 # Create PostgreSQL tables
 create_movies_table_sql = """
 CREATE TABLE IF NOT EXISTS movies (
@@ -212,10 +221,9 @@ insert_movie_data_task = PythonOperator(
     dag=dag
 )
 
-refresh_streamlit_task = BashOperator(
+refresh_streamlit_task = PythonOperator(
     task_id='refresh_streamlit_dashboard',
-    bash_command=('pkill -f "streamlit run" || true && '
-        'nohup streamlit run /dashboard/dashboard.py --server.port 8501 > /tmp/streamlit.log 2>&1 &'),
+    python_callable=restart_streamlit,
     dag=dag,
 )
 
