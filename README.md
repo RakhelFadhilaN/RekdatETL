@@ -59,6 +59,6 @@ Links:<br>
 
 ## Project Deliverables
 Report: [Published Notion](https://curse-snarl-0ec.notion.site/ETL-Movie-Data-Recommendation-Model-143dd068d33780c58c97f9c2311be770?pvs=4) <br>
-Video:  [YouTube]()
+Video:  https://drive.google.com/file/d/1lynFz__Ljc1T053-lvAmvepmo_RTKewL/view?usp=sharing
 
 
